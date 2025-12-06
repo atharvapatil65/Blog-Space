@@ -35,32 +35,47 @@ export default function Post() {
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
-                    <img
-                        src={appwriteService.getFilePreview(post.featuredImage)}
-                        alt={post.title}
-                        className="rounded-xl"
-                    />
+                <article className="max-w-4xl mx-auto">
+                    {/* Featured Image */}
+                    <div className="w-full mb-6 sm:mb-8 relative rounded-xl sm:rounded-2xl overflow-hidden shadow-xl">
+                        <img
+                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            alt={post.title}
+                            className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-                    {isAuthor && (
-                        <div className="absolute right-6 top-6">
-                            <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
-                                    Edit
+                        {isAuthor && (
+                            <div className="absolute right-3 top-3 sm:right-6 sm:top-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                <Link to={`/edit-post/${post.$id}`}>
+                                    <Button bgColor="bg-green-600" className="shadow-lg text-xs sm:text-sm px-3 sm:px-6 py-2">
+                                        Edit
+                                    </Button>
+                                </Link>
+                                <Button bgColor="bg-red-600" onClick={deletePost} className="shadow-lg text-xs sm:text-sm px-3 sm:px-6 py-2">
+                                    Delete
                                 </Button>
-                            </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
-                                Delete
-                            </Button>
-                        </div>
-                    )}
-                </div>
-                <div className="w-full mb-6">
-                    <h1 className="text-2xl font-bold">{post.title}</h1>
-                </div>
-                <div className="browser-css">
-                    {parse(post.content)}
+                            </div>
+                        )}
                     </div>
+
+                    {/* Post Title */}
+                    <div className="w-full mb-6 sm:mb-8">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                            {post.title}
+                        </h1>
+                        {post.status && (
+                            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                                {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Post Content */}
+                    <div className="browser-css bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg border border-gray-200">
+                        {parse(post.content)}
+                    </div>
+                </article>
             </Container>
         </div>
     ) : null;

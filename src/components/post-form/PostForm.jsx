@@ -71,52 +71,78 @@ export default function PostForm({ post }) {
     }, [watch, slugTransform, setValue]);
 
     return (
-        <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-            <div className="w-2/3 px-2">
-                <Input
-                    label="Title :"
-                    placeholder="Title"
-                    className="mb-4"
-                    {...register("title", { required: true })}
-                />
-                <Input
-                    label="Slug :"
-                    placeholder="Slug"
-                    className="mb-4"
-                    {...register("slug", { required: true })}
-                    onInput={(e) => {
-                        setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
-                    }}
-                />
-                <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
+        <div className="max-w-7xl mx-auto">
+            <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                    {post ? "Edit Post" : "Create New Post"}
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600">
+                    {post ? "Update your post information" : "Fill in the details to create a new blog post"}
+                </p>
             </div>
-            <div className="w-1/3 px-2">
-                <Input
-                    label="Featured Image :"
-                    type="file"
-                    className="mb-4"
-                    accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
-                />
-                {post && (
-                    <div className="w-full mb-4">
-                        <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
-                            alt={post.title}
-                            className="rounded-lg"
-                        />
+            <form onSubmit={handleSubmit(submit)} className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-200">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                    <div className="w-full lg:w-2/3">
+                        <div className="space-y-6">
+                            <Input
+                                label="Title"
+                                placeholder="Enter post title"
+                                className="mb-4"
+                                {...register("title", { required: true })}
+                            />
+                            <Input
+                                label="Slug"
+                                placeholder="Post slug (auto-generated)"
+                                className="mb-4"
+                                {...register("slug", { required: true })}
+                                onInput={(e) => {
+                                    setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
+                                }}
+                            />
+                            <div className="w-full">
+                                <RTE label="Content" name="content" control={control} defaultValue={getValues("content")} />
+                            </div>
+                        </div>
                     </div>
-                )}
-                <Select
-                    options={["active", "inactive"]}
-                    label="Status"
-                    className="mb-4"
-                    {...register("status", { required: true })}
-                />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
-                </Button>
-            </div>
-        </form>
+                    <div className="w-full lg:w-1/3">
+                        <div className="space-y-6">
+                            <div>
+                                <label className="inline-block mb-2 pl-1 text-sm font-medium text-gray-700">
+                                    Featured Image
+                                </label>
+                                <Input
+                                    type="file"
+                                    className="mb-4"
+                                    accept="image/png, image/jpg, image/jpeg, image/gif"
+                                    {...register("image", { required: !post })}
+                                />
+                                {post && (
+                                    <div className="w-full mb-4 rounded-lg overflow-hidden border border-gray-200">
+                                        <img
+                                            src={appwriteService.getFilePreview(post.featuredImage)}
+                                            alt={post.title}
+                                            className="w-full h-48 object-cover"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <Select
+                                options={["active", "inactive"]}
+                                label="Status"
+                                className="mb-4"
+                                {...register("status", { required: true })}
+                            />
+                            <Button 
+                                type="submit" 
+                                bgColor={post ? "bg-green-600" : "bg-blue-600"} 
+                                className="w-full"
+                            >
+                                {post ? "Update Post" : "Publish Post"}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     );
 }

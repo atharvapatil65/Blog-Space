@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 
-export default function Protected({children, authentication = true}) {
+export default function AuthLayout({children, authentication = true}) {
     const navigate = useNavigate()
     const [loader, setLoader] = useState(true)
     const authStatus = useSelector(state => state.auth.status)
@@ -19,5 +19,12 @@ export default function Protected({children, authentication = true}) {
         setLoader(false)
     }, [authStatus, navigate, authentication])
 
-    return loader ? <h1>Loading...</h1> : <>{children}</>
+    return loader ? (
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-600 text-lg">Loading...</p>
+            </div>
+        </div>
+    ) : <>{children}</>
 }

@@ -7,11 +7,21 @@ export class Service{
     bucket;
     
     constructor(){
-        this.client
-        .setEndpoint(conf.appwriteUrl)
-        .setProject(conf.appwriteProjectId);
-        this.databases = new Databases(this.client);
-        this.bucket = new Storage(this.client);
+        try {
+            if (!conf.appwriteUrl || !conf.appwriteProjectId || conf.appwriteUrl === '' || conf.appwriteProjectId === '') {
+                console.warn('Appwrite configuration is missing. Please check your .env file and ensure VITE_APPWRITE_URL and VITE_APPWRITE_PROJECT_ID are set.');
+                // Don't throw error, just log warning - allow app to still render
+                return;
+            }
+            this.client
+                .setEndpoint(conf.appwriteUrl)
+                .setProject(conf.appwriteProjectId);
+            this.databases = new Databases(this.client);
+            this.bucket = new Storage(this.client);
+        } catch (error) {
+            console.error('Failed to initialize Appwrite client:', error.message);
+            // Don't throw error, just log - allow app to still render
+        }
     }
 
     async createPost({title, slug, content, featuredImage, status, userId}){

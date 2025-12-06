@@ -20,12 +20,19 @@ function EditPost() {
         }
     }, [slug, navigate])
   return post ? (
-    <div className='py-8'>
+    <div className='py-8 min-h-[calc(100vh-200px)]'>
         <Container>
             <PostForm post={post} />
         </Container>
     </div>
-  ) : null
+  ) : (
+    <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-600 text-lg">Loading post...</p>
+      </div>
+    </div>
+  )
 }
 
 export default EditPost
